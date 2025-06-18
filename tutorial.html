@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tutorial PHP & MySQL Dasar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #f9fafb;
+            --text: #1f2937;
+            --code-bg: #f3f4f6;
+            --accent: #93c5fd;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            background: var(--secondary);
+            color: var(--text);
+        }
+
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            padding: 2rem 1rem;
+            background: white;
+            margin-top: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        h2 {
+            color: var(--primary);
+            margin-top: 2rem;
+            font-size: 1.4rem;
+        }
+
+        p,
+        ul {
+            font-size: 1rem;
+        }
+
+        code,
+        pre {
+            background: var(--code-bg);
+            padding: 1rem;
+            border-radius: 6px;
+            margin-top: 0.5rem;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+        }
+
+        pre {
+            position: relative;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid #e5e7eb;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        footer {
+            background: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            margin-top: 3rem;
+        }
+
+        @media (max-width: 640px) {
+            header h1 {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>Tutorial Dasar Membuat Website dengan PHP & MySQL</h1>
+    </header>
+
+    <div class="container">
+        <h2>1. Persiapan</h2>
+        <p>Pastikan Anda sudah menginstal:</p>
+        <ul>
+            <li>XAMPP atau aplikasi sejenis (untuk PHP & MySQL)</li>
+            <li>Code Editor seperti VS Code, Sublime, dll.</li>
+        </ul>
+
+        <h2>2. Struktur Folder</h2>
+        <p>Letakkan di folder <code>htdocs/tutorial_php</code></p>
+        <pre><code>htdocs/
+└── tutorial_php/
+    ├── index.php
+    └── koneksi.php</code></pre>
+
+        <h2>3. koneksi.php</h2>
+        <pre><code id="code1">&lt;?php
+$host = "localhost";
+$user = "root";
+$pass = "";
+$db   = "belajar";
+
+$conn = mysqli_connect($host, $user, $pass, $db);
+if (!$conn) {
+    die("Koneksi gagal: " . mysqli_connect_error());
+}
+?&gt;</code><button class="copy-btn" onclick="copyToClipboard('code1')">Salin</button></pre>
+
+        <h2>4. index.php</h2>
+        <pre><code id="code2">&lt;?php include "koneksi.php"; ?&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;Data Mahasiswa&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h2&gt;Daftar Mahasiswa&lt;/h2&gt;
+  &lt;table border="1" cellpadding="8"&gt;
+    &lt;tr&gt;&lt;th&gt;No&lt;/th&gt;&lt;th&gt;Nama&lt;/th&gt;&lt;th&gt;Jurusan&lt;/th&gt;&lt;/tr&gt;
+    &lt;?php
+    $sql = "SELECT * FROM mahasiswa";
+    $result = mysqli_query($conn, $sql);
+    $no = 1;
+    while ($row = mysqli_fetch_assoc($result)) {
+      echo "&lt;tr&gt;&lt;td&gt;$no&lt;/td&gt;&lt;td&gt;{$row['nama']}&lt;/td&gt;&lt;td&gt;{$row['jurusan']}&lt;/td&gt;&lt;/tr&gt;";
+      $no++;
+    }
+    ?&gt;
+  &lt;/table&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code><button class="copy-btn" onclick="copyToClipboard('code2')">Salin</button></pre>
+
+        <h2>5. Buat Database dan Tabel</h2>
+        <pre><code id="code3">CREATE DATABASE belajar;
+USE belajar;
+
+CREATE TABLE mahasiswa (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nama VARCHAR(100),
+  jurusan VARCHAR(100)
+);
+
+INSERT INTO mahasiswa (nama, jurusan) VALUES
+('Andi', 'Teknik Informatika'),
+('Budi', 'Sistem Informasi');</code><button class="copy-btn" onclick="copyToClipboard('code3')">Salin</button></pre>
+
+        <h2>6. Jalankan</h2>
+        <p>Buka browser dan akses: <code>http://localhost/tutorial_php</code>. Jika berhasil, data mahasiswa akan tampil
+            di halaman.</p>
+    </div>
+
+    <footer>
+        &copy; 2025 - Tutorial PHP & MySQL
+    </footer>
+
+    <script>
+        function copyToClipboard(id) {
+            const code = document.getElementById(id).innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                alert("Kode berhasil disalin!");
+            });
+        }
+    </script>
+
+</body>
+
+</html>
